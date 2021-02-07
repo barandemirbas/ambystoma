@@ -14,26 +14,26 @@ Go required for install from source.
 ### Linux 64-BIT
 
 ```sh
-wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-linux-x64 -O /usr/bin/ambystoma && chmod +x /usr/bin/ambystoma
+wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-linux-x64 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
 
 ```
 
 ### Linux 32-BIT 
 ```sh
-wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-linux-x32 -O /usr/bin/ambystoma && chmod +x /usr/bin/ambystoma
+wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-linux-x32 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
 
 ```
 
 ### Linux 64-BIT ARM
 
 ```sh
-wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-linux-arm64 -O /usr/bin/ambystoma && chmod +x /usr/bin/ambystoma
+wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-linux-arm64 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
 
 ```
 
 ### Linux 32-BIT ARM
 ```sh
-wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-linux-arm32 -O /usr/bin/ambystoma && chmod +x /usr/bin/ambystoma
+wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-linux-arm32 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
 
 ```
 
