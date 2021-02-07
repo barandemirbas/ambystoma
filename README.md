@@ -52,7 +52,7 @@ wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambysto
 curl -LJO https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-mac-x64 && mv ambystoma-mac-x64 /usr/local/bin/ambystoma && chmod +x /usr/local/bin/ambystoma
 ```
 
-### MacOS M
+### MacOS M1
 ```sh
 git clone https://github.com/barandemirbas/ambystoma.git && cd ambystoma
 make m1 && mv ./bin/ambystoma /usr/local/bin/ambystoma && chmod +x /usr/local/bin/ambystoma
