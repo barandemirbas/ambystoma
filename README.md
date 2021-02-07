@@ -1,8 +1,16 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/barandemirbas/ambystoma)](https://goreportcard.com/report/github.com/barandemirbas/ambystoma)
 [![Go Reference](https://pkg.go.dev/badge/github.com/barandemirbas/ambystoma.svg)](https://pkg.go.dev/github.com/barandemirbas/ambystoma)
+
 ## What is Ambystoma?
 **Ambystoma** is an HTTP server for **Frontend** Developers. 
 You can serve your **HTML**, **JavaScript** and **CSS** files with live reload.
+
+## Usage
+
+```sh
+ambystoma
+```
+Run this command in your work directory to serve files after installation.
 
 ## Install
 
