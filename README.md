@@ -1,3 +1,5 @@
+[![Go Report Card](https://goreportcard.com/badge/github.com/barandemirbas/ambystoma)](https://goreportcard.com/report/github.com/barandemirbas/ambystoma)
+[![Go Reference](https://pkg.go.dev/badge/github.com/barandemirbas/ambystoma.svg)](https://pkg.go.dev/github.com/barandemirbas/ambystoma)
 ## What is Ambystoma?
 **Ambystoma** is an HTTP server for **Frontend** Developers. 
 You can serve your **HTML**, **JavaScript** and **CSS** files with live reload.
@@ -42,7 +44,7 @@ wget https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambysto
 curl -LJO https://github.com/barandemirbas/ambystoma/releases/download/v1.0.0/ambystoma-mac-x64 && mv ambystoma-mac-x64 /usr/local/bin/ambystoma && chmod +x /usr/local/bin/ambystoma
 ```
 
-### MacOS M1
+### MacOS M
 ```sh
 git clone https://github.com/barandemirbas/ambystoma.git && cd ambystoma
 make m1 && mv ./bin/ambystoma /usr/local/bin/ambystoma && chmod +x /usr/local/bin/ambystoma
