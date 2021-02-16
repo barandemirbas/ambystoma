@@ -10,7 +10,10 @@ You can serve your **HTML**, **JavaScript** and **CSS** files with live reload.
 ```sh
 ambystoma
 ```
-Run this command in your work directory to serve files after installation.
+or use with port option
+```sh
+ambystoma -p 8081
+```
 
 ## Install
 
@@ -24,32 +27,32 @@ Go required for install from source.
 ### Linux 64-BIT
 
 ```sh
-sudo wget https://github.com/barandemirbas/ambystoma/releases/download/v0.0.1/ambystoma-linux-x64 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
+sudo wget https://github.com/barandemirbas/ambystoma/releases/download/v0.0.2/ambystoma-linux-x64 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
 
 ```
 
 ### Linux 32-BIT 
 ```sh
-sudo wget https://github.com/barandemirbas/ambystoma/releases/download/v0.0.1/ambystoma-linux-x32 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
+sudo wget https://github.com/barandemirbas/ambystoma/releases/download/v0.0.2/ambystoma-linux-x32 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
 
 ```
 
 ### Linux 64-BIT ARM
 
 ```sh
-sudo wget https://github.com/barandemirbas/ambystoma/releases/download/v0.0.1/ambystoma-linux-arm64 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
+sudo wget https://github.com/barandemirbas/ambystoma/releases/download/v0.0.2/ambystoma-linux-arm64 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
 
 ```
 
 ### Linux 32-BIT ARM
 ```sh
-sudo wget https://github.com/barandemirbas/ambystoma/releases/download/v0.0.1/ambystoma-linux-arm32 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
+sudo wget https://github.com/barandemirbas/ambystoma/releases/download/v0.0.2/ambystoma-linux-arm32 -O /usr/bin/ambystoma && sudo chmod +x /usr/bin/ambystoma
 
 ```
 
 ### MacOS
 ```sh
-curl -LJO https://github.com/barandemirbas/ambystoma/releases/download/v0.0.1/ambystoma-mac-x64 && mv ambystoma-mac-x64 /usr/local/bin/ambystoma && chmod +x /usr/local/bin/ambystoma
+curl -LJO https://github.com/barandemirbas/ambystoma/releases/download/v0.0.2/ambystoma-mac-x64 && mv ambystoma-mac-x64 /usr/local/bin/ambystoma && chmod +x /usr/local/bin/ambystoma
 ```
 
 ### MacOS M1
@@ -60,7 +63,7 @@ make m1 && mv ./bin/ambystoma /usr/local/bin/ambystoma && chmod +x /usr/local/bi
 Go required for install MacOS M1 release.
 
 ### Windows 64-BIT
-[Download Here.](https://github.com/barandemirbas/ambystoma/releases/download/v0.0.1/ambystoma-windows-x64.exe)
+[Download Here.](https://github.com/barandemirbas/ambystoma/releases/download/v0.0.2/ambystoma-windows-x64.exe)
 
 ### Windows 32-BIT
-[Download Here.](https://github.com/barandemirbas/ambystoma/releases/download/v0.0.1/ambystoma-windows-x64.exe)
+[Download Here.](https://github.com/barandemirbas/ambystoma/releases/download/v0.0.2/ambystoma-windows-x64.exe)
