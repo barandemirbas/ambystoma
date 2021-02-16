@@ -22,6 +22,6 @@ m1:
 	env GOOS=darwin GOARCH=arm64 go build -o ./release/ambystoma-mac-arm64 -ldflags "-s -w" -trimpath -mod=readonly
 
 clean:
-	rm -rf ./bin/*
-	rm -rf ./release/*
-	rm -rf ./vendor/*
+	rm -rf ./bin
+	rm -rf ./release
+	rm -rf ./vendor
