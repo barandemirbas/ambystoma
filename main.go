@@ -12,7 +12,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -29,7 +28,7 @@ type head struct {
 type body struct {
 	Content string `xml:",innerxml"`
 	Class   string `xml:"class,attr"`
-	Id      string `xml:"id,attr"`
+	ID      string `xml:"id,attr"`
 	Style   string `xml:"style,attr"`
 }
 
@@ -45,21 +44,21 @@ func main() {
 	log.Println(fmt.Sprintf("Server running on http://localhost:%d", *port))
 	http.HandleFunc("/", Server)
 	http.HandleFunc("/reload", Reload)
-	log.Fatal(http.ListenAndServe(":"+strconv.Itoa(*port), nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
 }
 
 // Server function is the web server
 func Server(w http.ResponseWriter, r *http.Request) {
 	h := html{}
 	w.Header().Set("Cache-Control", "no-store, max-age=0")
-	if strings.Contains(r.URL.Path, ".css") == false && strings.Contains(r.URL.Path, ".js") == false {
-		file, err := ioutil.ReadFile("index.html")
+	if !strings.Contains(r.URL.Path, ".css") && !strings.Contains(r.URL.Path, ".js") {
+		file, _ := ioutil.ReadFile("index.html")
 		if r.URL.Path != "/" {
-			file, err = ioutil.ReadFile(r.URL.Path[1:] + ".html")
+			file, _ = ioutil.ReadFile(r.URL.Path[1:] + ".html")
 		}
-		err = xml.NewDecoder(bytes.NewBuffer(file)).Decode(&h)
+		err := xml.NewDecoder(bytes.NewBuffer(file)).Decode(&h)
 		h.Body.Content += "<script>\nvar socket = new WebSocket(\"ws://localhost:8080/reload\");\nsocket.onopen = function () {\nconsole.log(\"Status: Connected.\");\n};\nsocket.onmessage = function (e) {\nlocation.reload();\n};\n</script>\n"
-		fmt.Fprintf(w, "<html lang='"+h.Lang+"'><head>"+h.Head.Content+"</head>\n"+"<body class='"+h.Body.Class+"' id='"+h.Body.Id+"' style='"+h.Body.Style+"'>"+h.Body.Content+"</body>\n</html>")
+		fmt.Fprintf(w, "<html lang='"+h.Lang+"'><head>"+h.Head.Content+"</head>\n"+"<body class='"+h.Body.Class+"' id='"+h.Body.ID+"' style='"+h.Body.Style+"'>"+h.Body.Content+"</body>\n</html>")
 		if err != nil && err != io.EOF {
 			fmt.Println(err)
 			return
@@ -71,19 +70,19 @@ func Server(w http.ResponseWriter, r *http.Request) {
 
 // Reload function is detect file changes and reload the page with websockets
 func Reload(w http.ResponseWriter, r *http.Request) {
-	conn, err := upgrader.Upgrade(w, r, nil)
-	watcher, _ := rfsnotify.NewWatcher()
+	conn, _ := upgrader.Upgrade(w, r, nil)
+	watcher, err := rfsnotify.NewWatcher()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	err = watcher.AddRecursive(".")
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	for {
-		select {
-		case <-watcher.Events:
-			err = conn.WriteMessage(1, []byte("reload"))
-			if err != nil {
-				return
-			}
-		}
+		<-watcher.Events
+		_ = conn.WriteMessage(1, []byte("reload"))
 	}
 }
