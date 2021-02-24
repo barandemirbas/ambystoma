@@ -19,8 +19,7 @@ ambystoma -p 8081
 
 ### Source
 ```sh
-git clone https://github.com/barandemirbas/ambystoma.git && cd ambystoma
-make build && ls ./bin/
+git clone https://github.com/barandemirbas/ambystoma.git && cd ambystoma && make build && sudo cp ./bin/ambystoma /usr/bin/ && sudo chmod +x /usr/bin/ambystoma
 ```
 Go required for install from source.
 
@@ -58,7 +57,7 @@ curl -LJO https://github.com/barandemirbas/ambystoma/releases/download/v0.0.2/am
 ### MacOS M1
 ```sh
 git clone https://github.com/barandemirbas/ambystoma.git && cd ambystoma
-make m1 && mv ./bin/ambystoma /usr/local/bin/ambystoma && chmod +x /usr/local/bin/ambystoma
+make m1 && cp ./bin/ambystoma /usr/local/bin/ && chmod +x /usr/local/bin/ambystoma
 ```
 Go required for install MacOS M1 release.
 
