@@ -7,10 +7,10 @@ import (
 	"fmt"
 	"github.com/barandemirbas/open-with"
 	"github.com/dietsche/rfsnotify"
+	"github.com/fatih/color"
 	"github.com/gorilla/websocket"
 	"io"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -37,14 +37,19 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+// colors
+var green = color.New(color.FgGreen).Add(color.Bold)
+var yellow = color.New(color.FgYellow).Add(color.Bold)
+var red = color.New(color.FgRed).Add(color.Bold)
+
 func main() {
 	port := flag.Int("p", 8080, "Set the port to serve")
 	flag.Parse()
 	openwith.Browser("localhost", *port)
-	log.Println(fmt.Sprintf("Server running on http://localhost:%d", *port))
+	green.Println("[+]", fmt.Sprintf("Server running on http://localhost:%d", *port))
 	http.HandleFunc("/", Server)
 	http.HandleFunc("/reload", Reload)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
+	red.Println("[!]", http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
 }
 
 // Server function is the web server
@@ -60,7 +65,7 @@ func Server(w http.ResponseWriter, r *http.Request) {
 		h.Body.Content += "<script>\nvar socket = new WebSocket(\"ws://localhost:8080/reload\");\nsocket.onopen = function () {\nconsole.log(\"Status: Connected.\");\n};\nsocket.onmessage = function (e) {\nlocation.reload();\n};\n</script>\n"
 		fmt.Fprintf(w, "<html lang='"+h.Lang+"'><head>"+h.Head.Content+"</head>\n"+"<body class='"+h.Body.Class+"' id='"+h.Body.ID+"' style='"+h.Body.Style+"'>"+h.Body.Content+"</body>\n</html>")
 		if err != nil && err != io.EOF {
-			fmt.Println(err)
+			yellow.Println("[-]", err)
 			return
 		}
 	} else {
@@ -73,12 +78,12 @@ func Reload(w http.ResponseWriter, r *http.Request) {
 	conn, _ := upgrader.Upgrade(w, r, nil)
 	watcher, err := rfsnotify.NewWatcher()
 	if err != nil {
-		fmt.Println(err)
+		red.Println("[!]", err)
 		return
 	}
 	err = watcher.AddRecursive(".")
 	if err != nil {
-		fmt.Println(err)
+		red.Println("[!]", err)
 		return
 	}
 	for {
