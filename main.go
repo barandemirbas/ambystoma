@@ -5,14 +5,15 @@ import (
 	"encoding/xml"
 	"flag"
 	"fmt"
-	"github.com/barandemirbas/open-with"
-	"github.com/dietsche/rfsnotify"
-	"github.com/fatih/color"
-	"github.com/gorilla/websocket"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	openwith "github.com/barandemirbas/open-with"
+	"github.com/dietsche/rfsnotify"
+	"github.com/fatih/color"
+	"github.com/gorilla/websocket"
 )
 
 type html struct {
@@ -61,7 +62,11 @@ func Server(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
 			file, _ = ioutil.ReadFile(r.URL.Path[1:] + ".html")
 		}
-		err := xml.NewDecoder(bytes.NewBuffer(file)).Decode(&h)
+		decoder := xml.NewDecoder(bytes.NewBuffer(file))
+		decoder.Entity = xml.HTMLEntity
+		decoder.AutoClose = xml.HTMLAutoClose
+		decoder.Strict = false
+		err := decoder.Decode(&h)
 		h.Body.Content += "<script>\nvar socket = new WebSocket(\"ws://localhost:8080/reload\");\nsocket.onopen = function () {\nconsole.log(\"Status: Connected.\");\n};\nsocket.onmessage = function (e) {\nlocation.reload();\n};\n</script>\n"
 		fmt.Fprintf(w, "<html lang='"+h.Lang+"'><head>"+h.Head.Content+"</head>\n"+"<body class='"+h.Body.Class+"' id='"+h.Body.ID+"' style='"+h.Body.Style+"'>"+h.Body.Content+"</body>\n</html>")
 		if err != nil && err != io.EOF {
