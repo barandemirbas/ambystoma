@@ -1,78 +1,72 @@
 package main
 
 import (
-	"bytes"
-	"encoding/xml"
+	_ "embed"
 	"flag"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 	"strings"
 
 	openwith "github.com/barandemirbas/open-with"
 	"github.com/dietsche/rfsnotify"
-	"github.com/fatih/color"
 	"github.com/gorilla/websocket"
 )
-
-type html struct {
-	Lang string `xml:"lang,attr"`
-	Head head   `xml:"head"`
-	Body body   `xml:"body"`
-}
-
-type head struct {
-	Content string `xml:",innerxml"`
-}
-
-type body struct {
-	Content string `xml:",innerxml"`
-	Class   string `xml:"class,attr"`
-	ID      string `xml:"id,attr"`
-	Style   string `xml:"style,attr"`
-}
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
 
-// colors
-var green = color.New(color.FgGreen).Add(color.Bold)
-var yellow = color.New(color.FgYellow).Add(color.Bold)
-var red = color.New(color.FgRed).Add(color.Bold)
+//go:embed injected.html
+var js string
 
 func main() {
 	port := flag.Int("p", 8080, "Set the port to serve")
 	flag.Parse()
+	SetPort(*port)
+
 	openwith.Browser("localhost", *port)
-	green.Println("[+]", fmt.Sprintf("Server running on http://localhost:%d", *port))
+
+	fmt.Println("[+]", fmt.Sprintf("Server running on http://localhost:%d", *port))
+
 	http.HandleFunc("/", Server)
 	http.HandleFunc("/reload", Reload)
-	red.Println("[!]", http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
+	fmt.Println("[!]", http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
+}
+
+func Inject(file []byte) string {
+	m := regexp.MustCompile("</head>")
+	res := m.ReplaceAllString(string(file), js)
+	return res
+}
+
+func SetPort(port int) {
+	m := regexp.MustCompile("var port = (.*);")
+	res := m.ReplaceAllString(js, fmt.Sprintf("var port = %d;", port))
+	js = res
 }
 
 // Server function is the web server
 func Server(w http.ResponseWriter, r *http.Request) {
-	h := html{}
 	w.Header().Set("Cache-Control", "no-store, max-age=0")
-	if !strings.Contains(r.URL.Path, ".css") && !strings.Contains(r.URL.Path, ".js") {
-		file, _ := ioutil.ReadFile("index.html")
+
+	file, err := ioutil.ReadFile("index.html")
+	if err != nil {
+		fmt.Fprintf(w, "<html><h3><strong>index.html</strong> not found</h3></html>")
+	}
+
+	if strings.Contains(r.URL.Path, ".html") || strings.Contains(r.URL.Path, ".htm") || r.URL.Path == "/" {
+
 		if r.URL.Path != "/" {
-			file, _ = ioutil.ReadFile(r.URL.Path[1:] + ".html")
+			file, err = ioutil.ReadFile(r.URL.Path[1:])
+			if err != nil {
+				fmt.Fprintf(w, "<html><h3><strong>%s</strong> not found</h3></html>", r.URL.Path[1:])
+			}
 		}
-		decoder := xml.NewDecoder(bytes.NewBuffer(file))
-		decoder.Entity = xml.HTMLEntity
-		decoder.AutoClose = xml.HTMLAutoClose
-		decoder.Strict = false
-		err := decoder.Decode(&h)
-		h.Body.Content += "<script>\nvar socket = new WebSocket(\"ws://localhost:8080/reload\");\nsocket.onopen = function () {\nconsole.log(\"Status: Connected.\");\n};\nsocket.onmessage = function (e) {\nlocation.reload();\n};\n</script>\n"
-		fmt.Fprintf(w, "<html lang='"+h.Lang+"'><head>"+h.Head.Content+"</head>\n"+"<body class='"+h.Body.Class+"' id='"+h.Body.ID+"' style='"+h.Body.Style+"'>"+h.Body.Content+"</body>\n</html>")
-		if err != nil && err != io.EOF {
-			yellow.Println("[-]", err)
-			return
-		}
+
+		fmt.Fprintf(w, Inject(file))
 	} else {
 		http.ServeFile(w, r, r.URL.Path[1:])
 	}
@@ -83,12 +77,12 @@ func Reload(w http.ResponseWriter, r *http.Request) {
 	conn, _ := upgrader.Upgrade(w, r, nil)
 	watcher, err := rfsnotify.NewWatcher()
 	if err != nil {
-		red.Println("[!]", err)
+		fmt.Println("[!]", err)
 		return
 	}
 	err = watcher.AddRecursive(".")
 	if err != nil {
-		red.Println("[!]", err)
+		fmt.Println("[!]", err)
 		return
 	}
 	for {
