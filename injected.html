@@ -1,0 +1,9 @@
+    <script>
+    var port = 8080;
+    var socket = new WebSocket("ws://localhost:" + port + "/reload");
+
+    socket.onmessage = function (e) {
+        location.reload();
+    }
+    </script>
+</head>
